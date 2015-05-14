@@ -2,7 +2,7 @@
 from functools import reduce
 import pprint
 import inspect
-import urllib.request
+import requests
 from lxml import html
 
 __all__ = ['Scrap', 'Attribute']
@@ -52,10 +52,12 @@ class Scrap(object):
             setattr(self, k, [r.text_content().strip() for r in elms if r.text_content()])
     
     def fetch(self, url, *args, **kwargs):
-        opener = urllib.request.build_opener()
-        req = urllib.request.Request(url.format(*args, **kwargs))
-        res = opener.open(req)
-        self._lxml_parser(res.read())
+        # opener = urllib.request.build_opener()
+        # req = urllib.request.Request(url.format(*args, **kwargs))
+        url = url.format(*args, **kwargs)
+        # res = opener.open(req)
+        res = requests.get(url)
+        self._lxml_parser(res.content)
 
 
 class Attribute(object):
